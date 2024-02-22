@@ -1,0 +1,70 @@
+---
+name: Terraform Workflow
+
+on:
+  # push:
+  #   inputs:
+  #     cloud_account:
+  #       description: 'What cloud account are you using?'
+  #       required: true
+  #       default: 'dp-sandbox'
+
+  #     environment:
+  #       description: 'Environment to deploy to (nonprod / prod)'
+  #       required: true
+  #       default: 'nonprod'
+
+  #     terraform_action:
+  #       description: 'Terraform (apply / plan)'
+  #       required: true
+  #       default: 'plan'
+
+  workflow_call:
+    inputs:
+      cloud_account:
+        description: 'What cloud account are you using?'
+        required: true
+        default: 'dp-sandbox'
+
+      environment:
+        description: 'Environment to deploy to (nonprod / prod)'
+        required: true
+        default: 'nonprod'
+
+      terraform_action:
+        description: 'Terraform (apply / plan)'
+        required: true
+        default: 'plan'
+
+env:
+  TF_VAR_FILE: "vars/${cloud_account}/${environment}/vars.tfvars"
+
+jobs:
+  terraform:
+    name: Terraform
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 5.37.0
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan -var-file ${env.TF_VAR_FILE}
+
+      - name: Terraform Apply
+        if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.terraform_action == 'apply'}}
+        run: |
+          echo "Step only executes when main branch manually triggered"
+          terraform apply -auto-approve \
+            -var-file ${env.TF_VAR_FILE}
