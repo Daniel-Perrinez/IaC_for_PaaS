@@ -1,12 +1,15 @@
+---
 name: Terraform Workflow
 
-on: [push, workflow_call]
-  inputs:
+on:
+  push:
+  workflow_call:
+    inputs:
       cloud_account:
         description: 'What cloud account are you using?'
         required: true
         default: 'dp-sandbox'
-        
+
       environment:
         description: 'Environment to deploy to (nonprod / prod)'
         required: true
@@ -23,24 +26,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v3
-      with:
-        terraform_version: 5.37.0
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 5.37.0
 
-    - name: Terraform Init
-      run: terraform init
+      - name: Terraform Init
+        run: terraform init
 
-    - name: Terraform Validate
-      run: terraform validate
+      - name: Terraform Validate
+        run: terraform validate
 
-    - name: Terraform Plan
-      run: terraform plan -var-file vars/${cloud_account}/${environment}/vars.tfvars
+      - name: Terraform Plan
+        run: terraform plan -var-file vars/${cloud_account}/${environment}/vars.tfvars
 
-    - name: Terraform Apply
-        if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && terraform_action == 'apply'}}
-        run: echo "This step will only execute on the main branch when triggered manually"
-        run: terraform apply -auto-approve -var-file vars/${cloud_account}/${environment}/vars.tfvars
+      - name: Terraform Apply
+          if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && terraform_action == 'apply'}}
+          run: echo "This step will only execute on the main branch when triggered manually"
+          run: terraform apply -auto-approve -var-file vars/${cloud_account}/${environment}/vars.tfvars
