@@ -2,23 +2,6 @@
 name: Terraform Workflow
 
 on:
-  # push:
-  #   inputs:
-  #     cloud_account:
-  #       description: 'What cloud account are you using?'
-  #       required: true
-  #       default: 'dp-sandbox'
-
-  #     environment:
-  #       description: 'Environment to deploy to (nonprod / prod)'
-  #       required: true
-  #       default: 'nonprod'
-
-  #     terraform_action:
-  #       description: 'Terraform (apply / plan)'
-  #       required: true
-  #       default: 'plan'
-
   workflow_call:
     inputs:
       cloud_account:
