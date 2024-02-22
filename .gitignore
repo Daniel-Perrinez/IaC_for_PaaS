@@ -1,6 +1,7 @@
 # Local .terraform directories
 **/.terraform/*
 
+# We need to commit .tfstate files for: IaC_for_PaaS/AWS_TF_Remote_Backend
 # .tfstate files
 # *.tfstate
 # *.tfstate.*
