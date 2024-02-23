@@ -49,13 +49,16 @@ jobs:
         run: terraform init
 
       - name: Terraform Validate
+        working-directory: AWS_TF_Remote_Backend
         run: terraform validate
 
       - name: Terraform Plan
+        working-directory: AWS_TF_Remote_Backend
         run: terraform plan -var-file ${{ env.TF_VAR_FILE }}
 
       - name: Terraform Apply
         if: ${{ success() && github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.terraform_action == 'apply'}}
+        working-directory: AWS_TF_Remote_Backend
         run: |
           echo "Step only executes when main branch manually triggered"
           terraform apply -auto-approve \
