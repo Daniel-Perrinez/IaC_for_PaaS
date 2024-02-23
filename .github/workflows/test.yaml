@@ -2,6 +2,7 @@
 name: Run Test
 
 on:
+  push:
   workflow_call:
     inputs:
       username:
