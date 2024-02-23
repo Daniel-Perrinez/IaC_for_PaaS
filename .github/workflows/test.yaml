@@ -2,19 +2,12 @@
 name: Run Test
 
 on:
-  push:
   workflow_call:
-    inputs:
-      username:
-        description: 'A username passed from the caller workflow'
-        default: 'john-doe'
-        required: false
-        type: string
+
 
 jobs:
-  print-username:
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Print the input name to STDOUT
-        run: echo The username is ${{ inputs.username }}
+      - name: ECHO test
+        run: echo "We did it!"
