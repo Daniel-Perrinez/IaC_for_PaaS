@@ -20,7 +20,7 @@ on:
         default: 'plan'
 
 env:
-  TF_VAR_FILE: "vars/${cloud_account}/${environment}/vars.tfvars"
+  TF_VAR_FILE: "vars/${inputs.cloud_account}/inputs.environment/vars.tfvars"
 
 jobs:
   terraform:
