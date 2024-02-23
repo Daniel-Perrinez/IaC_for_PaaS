@@ -1,4 +1,7 @@
-on:
+---
+name: Run Test
+
+"on":
   workflow_call:
     inputs:
       username:
