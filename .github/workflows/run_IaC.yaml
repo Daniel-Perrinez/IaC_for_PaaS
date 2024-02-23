@@ -20,7 +20,7 @@ on:
         default: 'plan'
 
 env:
-  TF_VAR_FILE: "vars/${inputs.cloud_account}/inputs.environment/vars.tfvars"
+  TF_VAR_FILE: "vars/inputs.cloud_account/inputs.environment/vars.tfvars"
 
 jobs:
   terraform:
@@ -52,11 +52,11 @@ jobs:
         run: terraform validate
 
       - name: Terraform Plan
-        run: terraform plan -var-file ${env.TF_VAR_FILE}
+        run: terraform plan -var-file env.TF_VAR_FILE
 
       - name: Terraform Apply
         if: ${{ success() && github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.terraform_action == 'apply'}}
         run: |
           echo "Step only executes when main branch manually triggered"
           terraform apply -auto-approve \
-            -var-file ${env.TF_VAR_FILE}
+            -var-file env.TF_VAR_FILE
