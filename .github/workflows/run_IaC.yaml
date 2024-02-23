@@ -31,14 +31,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Clear cache
-        run: |
-          echo "::remove-matcher owner=actions-cache::"
-
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@3.0.0
+        uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 5.37.0
+          terraform_version: 1.1.7
 
       - name: Terraform Init
         working-directory: IaC_for_PaaS/AWS_TF_Remote_Backend
