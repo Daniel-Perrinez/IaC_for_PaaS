@@ -1,0 +1,13 @@
+---
+name: Run Test
+
+on:
+  workflow_dispatch:
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ECHO test
+        run: echo "We did it!"
