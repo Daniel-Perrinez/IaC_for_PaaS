@@ -1,4 +1,4 @@
-[![Terraform Workflow](https://github.com/Daniel-Perrinez/IaC_for_PaaS/actions/workflows/tf_plan.yaml/badge.svg?branch=main)](https://github.com/Daniel-Perrinez/IaC_for_PaaS/actions/workflows/tf_plan.yaml)
+[![Run IaC Workflow](https://github.com/Daniel-Perrinez/IaC_for_PaaS/actions/workflows/run_IaC.yaml/badge.svg?branch=main)](https://github.com/Daniel-Perrinez/IaC_for_PaaS/actions/workflows/run_IaC.yaml)
 
 # IaC_for_PaaS
 Infrastructure as Code (IaC) for Platform as a Service (PaaS)
