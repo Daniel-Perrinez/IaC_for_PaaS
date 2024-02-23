@@ -1,5 +1,5 @@
 ---
-name: Terraform Workflow
+name: Run IaC Workflow
 
 on:
   workflow_call:
@@ -37,6 +37,7 @@ jobs:
           terraform_version: 5.37.0
 
       - name: Terraform Init
+        working-directory: IaC_for_PaaS/AWS_TF_Remote_Backend
         run: terraform init
 
       - name: Terraform Validate
