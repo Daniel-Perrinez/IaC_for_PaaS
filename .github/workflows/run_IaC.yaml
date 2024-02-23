@@ -30,17 +30,19 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.1.7
+
+      - name: Get repository information
         run: |
           echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
           echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
           echo "🖥️ The workflow is now ready to test your code on the runner."
           echo "List files in the repository"
           ls -la ${{ github.workspace }}
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.1.7
 
       - name: Terraform Init
         working-directory: IaC_for_PaaS/AWS_TF_Remote_Backend
