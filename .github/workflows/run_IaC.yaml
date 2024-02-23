@@ -45,7 +45,7 @@ jobs:
           ls -la ${{ github.workspace }}
 
       - name: Terraform Init
-        # working-directory: IaC_for_PaaS/AWS_TF_Remote_Backend
+        working-directory: AWS_TF_Remote_Backend
         run: terraform init
 
       - name: Terraform Validate
