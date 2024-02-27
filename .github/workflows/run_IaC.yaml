@@ -19,8 +19,13 @@ on:
         required: true
         default: 'plan'
 
+permissions:
+    id-token: write # This is required for aws oidc connection
+    contents: read # This is required for actions/checkout
+    pull-requests: write # This is required for gh bot to comment PR
+
 env:
-  TF_VAR_FILE: "vars/${cloud_account}/${environment}/vars.tfvars"
+  TF_VAR_FILE: "vars/${{ inputs.cloud_account }}/${{ inputs.environment }}/vars.tfvars"
 
 jobs:
   terraform:
@@ -30,25 +35,49 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      
+      - name: Get repository information
+        run: |
+          echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+          echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+          echo "🖥️ The workflow is now ready to test your code on the runner."
+          echo "List files in the repository"
+          ls -la ${{ github.workspace }}
+
+      - name: Configure AWS credentials from AWS account
+        uses: aws-actions/configure-aws-credentials@v4.0.2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-session-name: GitHub-OIDC-TERRAFORM
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 5.37.0
+          terraform_version: 1.6.6
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+      - name: Terraform fmt
+        id: fmt
+        run: terraform fmt -check
+        continue-on-error: true
 
       - name: Terraform Init
-        working-directory: IaC_for_PaaS/AWS_TF_Remote_Backend
+        working-directory: AWS_TF_Remote_Backend
         run: terraform init
 
       - name: Terraform Validate
+        working-directory: AWS_TF_Remote_Backend
         run: terraform validate
 
       - name: Terraform Plan
-        run: terraform plan -var-file ${env.TF_VAR_FILE}
+        working-directory: AWS_TF_Remote_Backend
+        run: terraform plan -var-file ${{ env.TF_VAR_FILE }}
 
       - name: Terraform Apply
-        if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.terraform_action == 'apply'}}
+        if: ${{ success() && github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.terraform_action == 'apply'}}
+        working-directory: AWS_TF_Remote_Backend
         run: |
           echo "Step only executes when main branch manually triggered"
           terraform apply -auto-approve \
-            -var-file ${env.TF_VAR_FILE}
+            -var-file ${{ env.TF_VAR_FILE }}
