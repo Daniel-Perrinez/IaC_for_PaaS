@@ -45,7 +45,7 @@ jobs:
           ls -la ${{ github.workspace }}
 
       - name: Configure AWS credentials from AWS account
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v4.0.2
         with:
           role-to-assume: ${{ secrets.AWS_ROLE }}
           aws-region: ${{ secrets.AWS_REGION }}
