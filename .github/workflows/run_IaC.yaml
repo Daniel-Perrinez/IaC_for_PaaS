@@ -1,5 +1,5 @@
 ---
-name: Run-IaC-Workflow
+name: Run IaC Workflow
 
 on:
   workflow_dispatch:
@@ -35,7 +35,7 @@ env:
 
 jobs:
   terraform:
-    name: Run_IaC_Workflow
+    name: Run-IaC-Workflow
     runs-on: ubuntu-latest
 
     steps:
