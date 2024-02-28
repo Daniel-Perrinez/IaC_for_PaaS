@@ -9,6 +9,11 @@ on:
         required: true
         default: 'dp-sandbox'
 
+      aws_region:
+        description: 'region to deploy to (us-east-1)'
+        required: true
+        default: 'us-east-1'
+
       environment:
         description: 'Environment to deploy to (nonprod / prod)'
         required: true
@@ -22,7 +27,7 @@ on:
 permissions:
     id-token: write # This is required for aws oidc connection
     contents: read # This is required for actions/checkout
-    pull-requests: write # This is required for gh bot to comment PR
+    # pull-requests: write # This is required for gh bot to comment PR
 
 env:
   TF_VAR_FILE: "vars/${{ inputs.cloud_account }}/${{ inputs.environment }}/vars.tfvars"
@@ -48,7 +53,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4.0.2
         with:
           role-to-assume: ${{ secrets.AWS_ROLE }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: ${{ inputs.aws_region }}
           role-session-name: GitHub-OIDC-TERRAFORM
 
       - name: Setup Terraform
@@ -73,6 +78,8 @@ jobs:
       - name: Terraform Plan
         working-directory: AWS_TF_Remote_Backend
         run: terraform plan -var-file ${{ env.TF_VAR_FILE }}
+        env:
+          TF_VAR_OIDC_THUMBPRINT_LIST: ${{ secrets.OIDC_THUMBPRINT_LIST }}
 
       - name: Terraform Apply
         if: ${{ success() && github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.terraform_action == 'apply'}}

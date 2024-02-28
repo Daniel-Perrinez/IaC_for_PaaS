@@ -2,20 +2,19 @@
 	"Version": "2012-10-17",
 	"Statement": [
 		{
-			// "Sid": "VisualEditor", GET RID OF THIS
 			"Effect": "Allow",
 			"Action": [
 				"s3:PutObject",
 				"s3:ListBucket",
-				"s3:Get*",
+				// "s3:Get*",
 				// FIND OUT HOW TO ONLY USE THESE ACTIONS
-				// "s3:GetObject",
-				// "s3:GetBucketPolicy",
-				// "S3:GetBucketAcl",
-				// "S3:GetBucketCors",
-				// "S3:GetBucketWebsite",
-				// "S3:GetBucketVersioning",
-				// // "S3:GetBucketAccelerateConfiguration", 
+				"s3:GetObject",
+				"s3:GetBucketPolicy",
+				"S3:GetBucketAcl",
+				"S3:GetBucketCors",
+				"S3:GetBucketWebsite",
+				"S3:GetBucketVersioning",
+				"S3:GetBucketAccelerateConfiguration", 
 				"iam:GetOpenIDConnectProvider",
 				"dynamodb:DescribeTable",
 				"dynamodb:DescribeContinuousBackups",

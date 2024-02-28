@@ -30,6 +30,12 @@ variable "dynamodb_table_name" {
   type        = string
 }
 
+variable "oidc_thumbprint_list" {
+  description = "value"
+  sensitive = true
+  type = list()
+}
+
 variable "tags" {
   type    = map(string)
   default = {}
