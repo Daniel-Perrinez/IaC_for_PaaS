@@ -32,7 +32,7 @@ variable "dynamodb_table_name" {
 
 variable "oidc_thumbprint" {
   description = "Thumbprint OpenID Connect"
-  sensitive = true
+  # sensitive = true
   type = string
 }
 
