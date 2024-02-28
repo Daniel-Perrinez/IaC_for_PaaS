@@ -1,5 +1,5 @@
 ---
-name: Run IaC Workflow
+name: Run-IaC-Workflow
 
 on:
   workflow_dispatch:
