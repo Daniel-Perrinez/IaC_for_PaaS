@@ -34,7 +34,7 @@ env:
 
 jobs:
   terraform:
-    name: Terraform
+    name: Run_IaC_Workflow
     runs-on: ubuntu-latest
 
     steps:
