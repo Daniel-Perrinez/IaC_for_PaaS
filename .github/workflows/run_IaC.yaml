@@ -40,7 +40,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4 #https://github.com/marketplace/actions/checkout
+        uses: actions/checkout@v4.1.1 #https://github.com/marketplace/actions/checkout
       
       - name: Get repository information
         run: |
