@@ -10,7 +10,7 @@ variable "environment_prefix" {
   description = "A prefix to denote the type of environment being used."
 }
 
-variable "region" {
+variable "aws_region" {
   description = "AWS region"
   type        = string
 }
@@ -28,6 +28,12 @@ variable "terraform_state_bucket_name" {
 variable "dynamodb_table_name" {
   description = "Name of dynamodb table for holding the terraform lock file"
   type        = string
+}
+
+variable "oidc_thumbprint" {
+  description = "Thumbprint OpenID Connect"
+  sensitive = true
+  type = string
 }
 
 variable "tags" {
