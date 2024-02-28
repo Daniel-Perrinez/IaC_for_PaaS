@@ -6,7 +6,6 @@
 # terraform import -var-file=vars/dp-sandbox/nonprod/vars.tfvars aws_dynamodb_table.tf_state_lock tf-resources-infrastructure-state-lock
 # terraform plan -var-file vars/dp-sandbox/nonprod/vars.tfvars -detailed-exitcode
 
-region                          = "us-east-1"
 environment                     = "NONPROD"
 environment_prefix              = "dp-sandbox-np"
 remote_state                    = "paas-remote-state"

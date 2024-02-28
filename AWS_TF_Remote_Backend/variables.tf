@@ -10,7 +10,7 @@ variable "environment_prefix" {
   description = "A prefix to denote the type of environment being used."
 }
 
-variable "region" {
+variable "aws_region" {
   description = "AWS region"
   type        = string
 }
@@ -33,7 +33,8 @@ variable "dynamodb_table_name" {
 variable "oidc_thumbprint_list" {
   description = "value"
   sensitive = true
-  type = list()
+  type = list(string)
+  default = [""]
 }
 
 variable "tags" {
