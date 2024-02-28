@@ -27,7 +27,6 @@ on:
 permissions:
     id-token: write # This is required for aws oidc connection
     contents: read # This is required for actions/checkout
-    # pull-requests: write # This is required for gh bot to comment PR
 
 env:
   TF_VAR_FILE: "vars/${{ inputs.cloud_account }}/${{ inputs.environment }}/vars.tfvars"
@@ -41,7 +40,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4 #https://github.com/marketplace/actions/checkout
       
       - name: Get repository information
         run: |
@@ -52,22 +51,23 @@ jobs:
           ls -la ${{ github.workspace }}
 
       - name: Configure AWS credentials from AWS account
-        uses: aws-actions/configure-aws-credentials@v4.0.2
+        uses: aws-actions/configure-aws-credentials@v4.0.2 #https://github.com/marketplace/actions/configure-aws-credentials-action-for-github-actions
         with:
           role-to-assume: ${{ secrets.AWS_ROLE }}
           aws-region: ${{ inputs.aws_region }}
           role-session-name: GitHub-OIDC-TERRAFORM
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@v3 #https://github.com/marketplace/actions/hashicorp-setup-terraform
         with:
           terraform_version: 1.6.6
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
       - name: Terraform fmt
+        working-directory: AWS_TF_Remote_Backend
         id: fmt
         run: terraform fmt -check
-        continue-on-error: true
+        continue-on-error: false
 
       - name: Terraform Init
         working-directory: AWS_TF_Remote_Backend
@@ -80,9 +80,6 @@ jobs:
       - name: Terraform Plan
         working-directory: AWS_TF_Remote_Backend
         run: terraform plan -var-file ${{ env.TF_VAR_FILE }}
-        # env:
-        #   TF_VAR_oidc_thumbprint: ${{ secrets.OIDC_THUMBPRINT }}
-        #   TF_VAR_aws_region: ${{inputs.aws_region}}
 
       - name: Terraform Apply
         if: ${{ success() && github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.terraform_action == 'apply'}}
