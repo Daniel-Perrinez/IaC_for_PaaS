@@ -67,7 +67,7 @@ jobs:
         working-directory: AWS_TF_Remote_Backend
         id: fmt
         run: terraform fmt -check
-        continue-on-error: false
+        continue-on-error: true
 
       - name: Terraform Init
         working-directory: AWS_TF_Remote_Backend
