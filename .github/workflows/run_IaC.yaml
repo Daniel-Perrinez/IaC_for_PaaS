@@ -31,6 +31,8 @@ permissions:
 
 env:
   TF_VAR_FILE: "vars/${{ inputs.cloud_account }}/${{ inputs.environment }}/vars.tfvars"
+  TF_VAR_oidc_thumbprint: ${{ secrets.OIDC_THUMBPRINT }}
+  TF_VAR_aws_region: ${{inputs.aws_region}}
 
 jobs:
   terraform:
@@ -78,9 +80,9 @@ jobs:
       - name: Terraform Plan
         working-directory: AWS_TF_Remote_Backend
         run: terraform plan -var-file ${{ env.TF_VAR_FILE }}
-        env:
-          TF_VAR_oidc_thumbprint: ${{ secrets.OIDC_THUMBPRINT }}
-          TF_VAR_aws_region: ${{inputs.aws_region}}
+        # env:
+        #   TF_VAR_oidc_thumbprint: ${{ secrets.OIDC_THUMBPRINT }}
+        #   TF_VAR_aws_region: ${{inputs.aws_region}}
 
       - name: Terraform Apply
         if: ${{ success() && github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.terraform_action == 'apply'}}
