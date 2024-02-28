@@ -79,7 +79,7 @@ jobs:
         working-directory: AWS_TF_Remote_Backend
         run: terraform plan -var-file ${{ env.TF_VAR_FILE }}
         env:
-          TF_VAR_oidc_thumbprint_list: ${{ secrets.OIDC_THUMBPRINT_LIST }}
+          TF_VAR_oidc_thumbprint: ${{ secrets.OIDC_THUMBPRINT_LIST }}
           TF_VAR_aws_region: ${{inputs.aws_region}}
 
       - name: Terraform Apply
