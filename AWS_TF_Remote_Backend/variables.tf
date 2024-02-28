@@ -31,10 +31,10 @@ variable "dynamodb_table_name" {
 }
 
 variable "oidc_thumbprint_list" {
-  description = "value"
+  description = "Thumbprint OpenID Connect"
   sensitive = true
   type = list(string)
-  default = [""]
+  default = ["abc123"]
 }
 
 variable "tags" {
