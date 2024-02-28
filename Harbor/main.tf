@@ -1,10 +1,10 @@
 provider "aws" {
-  region = var.region
+  region = var.aws_region
 }
 
 locals {
   name   = "Harbor_Host_PaaS"
-  region = var.region
+  region = var.aws_region
 
   tags = {
     Example    = local.name
