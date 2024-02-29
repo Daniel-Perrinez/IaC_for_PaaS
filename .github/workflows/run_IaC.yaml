@@ -32,18 +32,18 @@ permissions:
     id-token: write # This is required for aws oidc connection
 #     contents: read # This is required for actions/checkout
 
-if: github.event_name == 'workflow_dispatch'
-   env:
-     CLOUD_ACCOUNT: inputs.cloud_account
-     AWS_REGION: inputs.aws_region
-     ENVIRONMENT: inputs.environment
-     TERRAFORM_ACTION: inputs.terraform_action
-else:
-   env:
-     CLOUD_ACCOUNT: 'dp-sandbox'
-     AWS_REGION: 'us-east-1'
-     ENVIRONMENT: 'nonprod'
-     TERRAFORM_ACTION: 'plan'
+# if: github.event_name == 'workflow_dispatch'
+# env:
+#   CLOUD_ACCOUNT: inputs.cloud_account
+#   AWS_REGION: inputs.aws_region
+#   ENVIRONMENT: inputs.environment
+#   TERRAFORM_ACTION: inputs.terraform_action
+# else:
+env:
+  CLOUD_ACCOUNT: 'dp-sandbox'
+  AWS_REGION: 'us-east-1'
+  ENVIRONMENT: 'nonprod'
+  TERRAFORM_ACTION: 'plan'
 
 jobs:
   terraform:
