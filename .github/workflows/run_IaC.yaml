@@ -41,7 +41,6 @@ jobs:
       - name: Set Environment Variable Conditionally
         run: |
           if [ "${{ github.event_name }}" == 'workflow_dispatch' ]; then
-
             echo "CLOUD_ACCOUNT=${{inputs.cloud_account}}"
             echo "AWS_REGION=${{inputs.aws_region}}"
             echo "ENVIRONMENT=${{inputs.environment}}"
@@ -53,9 +52,9 @@ jobs:
             echo "TERRAFORM_ACTION=plan"
             
           fi
-          echo "TF_VAR_FILE=vars/${{ CLOUD_ACCOUNT }}/${{ ENVIRONMENT }}/vars.tfvars"
+          echo "TF_VAR_FILE=vars/$CLOUD_ACCOUNT/$ENVIRONMENT/vars.tfvars"
           echo "TF_VAR_oidc_thumbprint=${{ secrets.OIDC_THUMBPRINT }}"
-          echo "TF_VAR_aws_region=${{ AWS_REGION }}"
+          echo "TF_VAR_aws_region=$AWS_REGION"
 
       - name: Checkout code
         uses: actions/checkout@v4.1.1 #https://github.com/marketplace/actions/checkout
@@ -72,7 +71,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4.0.2 #https://github.com/marketplace/actions/configure-aws-credentials-action-for-github-actions
         with:
           role-to-assume: ${{ secrets.AWS_ROLE }}
-          aws-region: ${{ AWS_REGION }}
+          aws-region: $AWS_REGION
           role-session-name: GitHub-OIDC-TERRAFORM
 
       - name: Setup Terraform
@@ -91,12 +90,12 @@ jobs:
 
       - name: Terraform Plan
         working-directory: AWS_TF_Remote_Backend
-        run: terraform plan -var-file ${{ TF_VAR_FILE }}
+        run: terraform plan -var-file $TF_VAR_FILE
 
       - name: Terraform Apply
-        if: ${{ success() && github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && TERRAFORM_ACTION == 'apply'}}
+        if: ${{ success() && github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && env.TERRAFORM_ACTION == 'apply'}}
         working-directory: AWS_TF_Remote_Backend
         run: |
           echo "Step only executes when main branch manually triggered"
           terraform apply -auto-approve \
-            -var-file ${{ TF_VAR_FILE }}
+            -var-file $TF_VAR_FILE
