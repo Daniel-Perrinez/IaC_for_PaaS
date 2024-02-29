@@ -32,29 +32,47 @@ permissions:
     id-token: write # This is required for aws oidc connection
 #     contents: read # This is required for actions/checkout
 
+if: github.event_name == 'workflow_dispatch'
+   env:
+     CLOUD_ACCOUNT: inputs.cloud_account
+     AWS_REGION: inputs.aws_region
+     ENVIRONMENT: inputs.environment
+     TERRAFORM_ACTION: inputs.terraform_action
+else:
+   env:
+     CLOUD_ACCOUNT: 'dp-sandbox'
+     AWS_REGION: 'us-east-1'
+     ENVIRONMENT: 'nonprod'
+     TERRAFORM_ACTION: 'plan'
+
 jobs:
   terraform:
     name: Run-IaC-Workflow
     runs-on: ubuntu-latest
 
+    env:
+      TF_VAR_FILE: "vars/${{ env.CLOUD_ACCOUNT }}/${{ env.ENVIRONMENT }}/vars.tfvars"
+      TF_VAR_oidc_thumbprint: ${{ secrets.OIDC_THUMBPRINT }}
+      TF_VAR_aws_region: ${{ env.AWS_REGION }}
+
     steps:
-      - name: Set Environment Variable Conditionally
-        run: |
-          if [ "${{ github.event_name }}" == 'workflow_dispatch' ]; then
-            echo "::set-output name=CLOUD_ACCOUNT::${{inputs.cloud_account}}"
-            echo "::set-output name=AWS_REGION::${{inputs.aws_region}}"
-            echo "::set-output name=ENVIRONMENT::${{inputs.environment}}"
-            echo "::set-output name=TERRAFORM_ACTION::${{inputs.terraform_action}}"
-          else
-            echo "::set-output name=CLOUD_ACCOUNT::dp-sandbox"
-            echo "::set-output name=AWS_REGION::us-east-1"
-            echo "::set-output name=ENVIRONMENT::nonprod"
-            echo "::set-output name=TERRAFORM_ACTION::plan"
+      # - name: Set Environment Variable Conditionally
+      #   run: |
+      #     if [ "${{ github.event_name }}" == 'workflow_dispatch' ]; then
+      #       echo "::set-output name=CLOUD_ACCOUNT::${{inputs.cloud_account}}"
+      #       echo "::set-output name=AWS_REGION::${{inputs.aws_region}}"
+      #       echo "::set-output name=ENVIRONMENT::${{inputs.environment}}"
+      #       echo "::set-output name=TERRAFORM_ACTION::${{inputs.terraform_action}}"
+      #     else
+      #       echo "::set-output name=CLOUD_ACCOUNT::dp-sandbox"
+      #       echo "::set-output name=AWS_REGION::us-east-1"
+      #       echo "::set-output name=ENVIRONMENT::nonprod"
+      #       echo "::set-output name=TERRAFORM_ACTION::plan"
             
-          fi
-          echo "TF_VAR_FILE=vars/${{ steps.set-var.outputs.CLOUD_ACCOUNT }}/${{ steps.set-var.outputs.ENVIRONMENT }}/vars.tfvars"
-          echo "TF_VAR_oidc_thumbprint=${{ secrets.OIDC_THUMBPRINT }}"
-          echo "TF_VAR_aws_region=${{ steps.set-var.outputs.AWS_REGION }}"
+      #     fi
+      #     echo "TF_VAR_FILE=vars/${{ steps.set-var.outputs.CLOUD_ACCOUNT }}/${{ steps.set-var.outputs.ENVIRONMENT }}/vars.tfvars"
+      #     echo "TF_VAR_oidc_thumbprint=${{ secrets.OIDC_THUMBPRINT }}"
+      #     echo "TF_VAR_aws_region=${{ steps.set-var.outputs.AWS_REGION }}"
 
       - name: Checkout code
         uses: actions/checkout@v4.1.1 #https://github.com/marketplace/actions/checkout
