@@ -46,15 +46,15 @@ jobs:
       TF_VAR_oidc_thumbprint: ${{ secrets.OIDC_THUMBPRINT }}
       TF_VAR_aws_region: us-east-1
   
-    if: github.event_name == 'workflow_dispatch'
-    env:
-      CLOUD_ACCOUNT: inputs.cloud_account
-      AWS_REGION: inputs.aws_region
-      ENVIRONMENT: inputs.environment
-      TERRAFORM_ACTION: inputs.terraform_action
-      TF_VAR_FILE: "vars/${{ inputs.cloud_account }}/${{ inputs.environment }}/vars.tfvars"
-      TF_VAR_oidc_thumbprint: ${{ secrets.OIDC_THUMBPRINT }}
-      TF_VAR_aws_region: ${{inputs.aws_region}}
+    # if: github.event_name == 'workflow_dispatch'
+    # env:
+    #   CLOUD_ACCOUNT: inputs.cloud_account
+    #   AWS_REGION: inputs.aws_region
+    #   ENVIRONMENT: inputs.environment
+    #   TERRAFORM_ACTION: inputs.terraform_action
+    #   TF_VAR_FILE: "vars/${{ inputs.cloud_account }}/${{ inputs.environment }}/vars.tfvars"
+    #   TF_VAR_oidc_thumbprint: ${{ secrets.OIDC_THUMBPRINT }}
+    #   TF_VAR_aws_region: ${{inputs.aws_region}}
 
     steps:
       # - name: Set Environment Variable Conditionally
