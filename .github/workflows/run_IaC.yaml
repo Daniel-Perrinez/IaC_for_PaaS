@@ -55,15 +55,17 @@ jobs:
     steps:
       - name: Set Environment Variable Conditionally
         run: |
-          if [ "${{ github.event_name }}" == 'workflow_dispatch' ]; then
-            echo "DOCKER_IMAGE_NAME=my.docker.repo/awesome-image:release" >> $GITHUB_ENV
-          
+          if [ "${{ github.event_name }}" == 'workflow_dispatch' ]; then          
             echo "CLOUD_ACCOUNT=${{inputs.cloud_account}}" >> $GITHUB_ENV
             echo "AWS_REGION=${{inputs.aws_region}}" >> $GITHUB_ENV
             echo "ENVIRONMENT=${{inputs.environment}}" >> $GITHUB_ENV
             echo "TERRAFORM_ACTION=${{inputs.terraform_action}}" >> $GITHUB_ENV
           else
             echo "-------- ELSE condition --------"
+            echo "CLOUD_ACCOUNT=${{vars.cloud_account}}" >> $GITHUB_ENV
+            echo "AWS_REGION=${{vars.aws_region}}" >> $GITHUB_ENV
+            echo "ENVIRONMENT=${{vars.environment}}" >> $GITHUB_ENV
+            echo "TERRAFORM_ACTION=${{vars.terraform_action}}" >> $GITHUB_ENV
             
           fi
           # echo "TF_VAR_FILE=vars/${{ steps.set-var.outputs.CLOUD_ACCOUNT }}/${{ steps.set-var.outputs.ENVIRONMENT }}/vars.tfvars"
@@ -85,7 +87,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4.0.2 #https://github.com/marketplace/actions/configure-aws-credentials-action-for-github-actions
         with:
           role-to-assume: ${{ secrets.AWS_ROLE }}
-          aws-region: ${{ vars.AWS_REGION }}
+          aws-region: $AWS_REGION
           role-session-name: GitHub-OIDC-TERRAFORM
 
       - name: Setup Terraform
