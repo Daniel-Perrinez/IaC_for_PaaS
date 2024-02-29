@@ -42,7 +42,7 @@ env:
   TF_VAR_oidc_thumbprint: ${{ secrets.OIDC_THUMBPRINT }}
   TF_VAR_aws_region: ${{inputs.aws_region}}
 
-else:
+if: github.event_name == 'push'
 env:
   CLOUD_ACCOUNT: 'dp-sandbox'
   AWS_REGION: 'us-east-1'
