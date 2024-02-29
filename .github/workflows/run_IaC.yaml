@@ -2,6 +2,10 @@
 name: Run IaC Workflow
 
 on:
+  push:
+    branches:
+      - '*'  
+
   workflow_dispatch:
     inputs:
       cloud_account:
@@ -26,19 +30,36 @@ on:
 
 permissions:
     id-token: write # This is required for aws oidc connection
-    contents: read # This is required for actions/checkout
-
-env:
-  TF_VAR_FILE: "vars/${{ inputs.cloud_account }}/${{ inputs.environment }}/vars.tfvars"
-  TF_VAR_oidc_thumbprint: ${{ secrets.OIDC_THUMBPRINT }}
-  TF_VAR_aws_region: ${{inputs.aws_region}}
 
 jobs:
-  terraform:
+  Run-IaC:
+
     name: Run-IaC-Workflow
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set Environment Variable Conditionally
+        run: |
+          if [ "${{ github.event_name }}" == 'workflow_dispatch' ]; then
+            echo "-------- Manual Job Values --------"
+            echo "CLOUD_ACCOUNT=${{inputs.cloud_account}}" >> $GITHUB_ENV
+            echo "AWS_REGION=${{inputs.aws_region}}" >> $GITHUB_ENV
+            echo "ENVIRONMENT=${{inputs.environment}}" >> $GITHUB_ENV
+            echo "TERRAFORM_ACTION=${{inputs.terraform_action}}" >> $GITHUB_ENV
+            echo "TF_VAR_FILE=vars/${{inputs.cloud_account}}/${{inputs.environment}}/vars.tfvars" >> $GITHUB_ENV
+            echo "TF_VAR_oidc_thumbprint=${{ secrets.OIDC_THUMBPRINT }}" >> $GITHUB_ENV
+            echo "TF_VAR_aws_region=${{inputs.aws_region}}" >> $GITHUB_ENV
+          else
+            echo "-------- Default Job Values --------"
+            echo "CLOUD_ACCOUNT=${{vars.cloud_account}}" >> $GITHUB_ENV
+            echo "AWS_REGION=${{vars.aws_region}}" >> $GITHUB_ENV
+            echo "ENVIRONMENT=${{vars.environment}}" >> $GITHUB_ENV
+            echo "TERRAFORM_ACTION=${{vars.terraform_action}}" >> $GITHUB_ENV
+            echo "TF_VAR_FILE=vars/${{vars.cloud_account}}/${{vars.environment}}/vars.tfvars" >> $GITHUB_ENV
+            echo "TF_VAR_oidc_thumbprint=${{ secrets.OIDC_THUMBPRINT }}" >> $GITHUB_ENV
+            echo "TF_VAR_aws_region=${{vars.aws_region}}" >> $GITHUB_ENV
+          fi
+
       - name: Checkout code
         uses: actions/checkout@v4.1.1 #https://github.com/marketplace/actions/checkout
       
@@ -54,7 +75,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4.0.2 #https://github.com/marketplace/actions/configure-aws-credentials-action-for-github-actions
         with:
           role-to-assume: ${{ secrets.AWS_ROLE }}
-          aws-region: ${{ inputs.aws_region }}
+          aws-region: ${{ env.AWS_REGION }}
           role-session-name: GitHub-OIDC-TERRAFORM
 
       - name: Setup Terraform
@@ -62,12 +83,6 @@ jobs:
         with:
           terraform_version: 1.6.6
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-
-      # - name: Terraform fmt
-      #   working-directory: AWS_TF_Remote_Backend
-      #   id: fmt
-      #   run: terraform fmt -check
-      #   continue-on-error: true
 
       - name: Terraform Init
         working-directory: AWS_TF_Remote_Backend
@@ -82,7 +97,7 @@ jobs:
         run: terraform plan -var-file ${{ env.TF_VAR_FILE }}
 
       - name: Terraform Apply
-        if: ${{ success() && github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.terraform_action == 'apply'}}
+        if: ${{ success() && github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && env.TERRAFORM_ACTION == 'apply'}}
         working-directory: AWS_TF_Remote_Backend
         run: |
           echo "Step only executes when main branch manually triggered"
