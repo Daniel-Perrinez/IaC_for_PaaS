@@ -2,7 +2,11 @@
 name: Run IaC Workflow
 
 on:
-  [push, workflow_dispatch]:
+  push:
+    branches:
+      - '*'  
+      
+  workflow_dispatch:
     inputs:
       cloud_account:
         description: 'What cloud account are you using?'
