@@ -32,6 +32,15 @@ permissions:
     id-token: write # This is required for aws oidc connection
 #     contents: read # This is required for actions/checkout
 
+env:
+  CLOUD_ACCOUNT: 'dp-sandbox'
+  AWS_REGION: 'us-east-1'
+  ENVIRONMENT: 'nonprod'
+  TERRAFORM_ACTION: 'plan'
+  TF_VAR_FILE: "vars/dp-sanbox/nonprod/vars.tfvars"
+  TF_VAR_oidc_thumbprint: ${{ secrets.OIDC_THUMBPRINT }}
+  TF_VAR_aws_region: us-east-1
+  
 if: github.event_name == 'workflow_dispatch'
 env:
   CLOUD_ACCOUNT: inputs.cloud_account
@@ -41,16 +50,6 @@ env:
   TF_VAR_FILE: "vars/${{ inputs.cloud_account }}/${{ inputs.environment }}/vars.tfvars"
   TF_VAR_oidc_thumbprint: ${{ secrets.OIDC_THUMBPRINT }}
   TF_VAR_aws_region: ${{inputs.aws_region}}
-
-if: github.event_name == 'push'
-env:
-  CLOUD_ACCOUNT: 'dp-sandbox'
-  AWS_REGION: 'us-east-1'
-  ENVIRONMENT: 'nonprod'
-  TERRAFORM_ACTION: 'plan'
-  TF_VAR_FILE: "vars/dp-sanbox/nonprod/vars.tfvars"
-  TF_VAR_oidc_thumbprint: ${{ secrets.OIDC_THUMBPRINT }}
-  TF_VAR_aws_region: us-east-1
 
 jobs:
   Run-IaC:
