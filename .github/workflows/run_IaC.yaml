@@ -24,9 +24,9 @@ on:
         required: true
         default: 'plan'
 
-permissions:
-    id-token: write # This is required for aws oidc connection
-    contents: read # This is required for actions/checkout
+# permissions:
+#     id-token: write # This is required for aws oidc connection
+#     contents: read # This is required for actions/checkout
 
 env:
   TF_VAR_FILE: "vars/${{ inputs.cloud_account }}/${{ inputs.environment }}/vars.tfvars"
