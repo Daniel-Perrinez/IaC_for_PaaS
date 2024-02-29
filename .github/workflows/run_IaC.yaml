@@ -41,15 +41,15 @@ jobs:
       - name: Set Environment Variable Conditionally
         run: |
           if [ "${{ github.event_name }}" == 'workflow_dispatch' ]; then
-            CLOUD_ACCOUNT=${{inputs.cloud_account}}
-            AWS_REGION=${{inputs.aws_region}}
-            ENVIRONMENT=${{inputs.environment}}
-            TERRAFORM_ACTION=${{inputs.terraform_action}}
+            export CLOUD_ACCOUNT=${{inputs.cloud_account}}
+            export AWS_REGION=${{inputs.aws_region}}
+            export ENVIRONMENT=${{inputs.environment}}
+            export TERRAFORM_ACTION=${{inputs.terraform_action}}
           else
-            CLOUD_ACCOUNT=dp-sandbox
-            AWS_REGION=us-east-1
-            ENVIRONMENT=nonprod
-            TERRAFORM_ACTION=plan
+            export CLOUD_ACCOUNT=dp-sandbox
+            export AWS_REGION=us-east-1
+            export ENVIRONMENT=nonprod
+            export TERRAFORM_ACTION=plan
             
           fi
           echo "TF_VAR_FILE=vars/$CLOUD_ACCOUNT/$ENVIRONMENT/vars.tfvars"
