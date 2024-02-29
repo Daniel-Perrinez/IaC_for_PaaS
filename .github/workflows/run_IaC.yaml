@@ -39,6 +39,7 @@ permissions:
 #   ENVIRONMENT: inputs.environment
 #   TERRAFORM_ACTION: inputs.terraform_action
 # else:
+
 env:
   CLOUD_ACCOUNT: 'dp-sandbox'
   AWS_REGION: 'us-east-1'
@@ -50,7 +51,7 @@ env:
   TF_VAR_aws_region: $AWS_REGION
 
 jobs:
-  terraform:
+  Run-IaC:
     name: Run-IaC-Workflow
     runs-on: ubuntu-latest
 
