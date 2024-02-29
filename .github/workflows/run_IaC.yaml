@@ -41,20 +41,20 @@ jobs:
       - name: Set Environment Variable Conditionally
         run: |
           if [ "${{ github.event_name }}" == 'workflow_dispatch' ]; then
-            export CLOUD_ACCOUNT=${{inputs.cloud_account}}
-            export AWS_REGION=${{inputs.aws_region}}
-            export ENVIRONMENT=${{inputs.environment}}
-            export TERRAFORM_ACTION=${{inputs.terraform_action}}
+            echo "::set-output name=CLOUD_ACCOUNT::${{inputs.cloud_account}}"
+            echo "::set-output name=AWS_REGION::${{inputs.aws_region}}"
+            echo "::set-output name=ENVIRONMENT::${{inputs.environment}}"
+            echo "::set-output name=TERRAFORM_ACTION::${{inputs.terraform_action}}"
           else
-            export CLOUD_ACCOUNT=dp-sandbox
-            export AWS_REGION=us-east-1
-            export ENVIRONMENT=nonprod
-            export TERRAFORM_ACTION=plan
+            echo "::set-output name=CLOUD_ACCOUNT::dp-sandbox"
+            echo "::set-output name=AWS_REGION::us-east-1"
+            echo "::set-output name=ENVIRONMENT::nonprod"
+            echo "::set-output name=TERRAFORM_ACTION::plan"
             
           fi
-          echo "TF_VAR_FILE=vars/$CLOUD_ACCOUNT/$ENVIRONMENT/vars.tfvars"
+          echo "TF_VAR_FILE=vars/${{ steps.set-var.outputs.CLOUD_ACCOUNT }}/${{ steps.set-var.outputs.ENVIRONMENT }}/vars.tfvars"
           echo "TF_VAR_oidc_thumbprint=${{ secrets.OIDC_THUMBPRINT }}"
-          echo "TF_VAR_aws_region=$AWS_REGION"
+          echo "TF_VAR_aws_region=${{ steps.set-var.outputs.AWS_REGION }}"
 
       - name: Checkout code
         uses: actions/checkout@v4.1.1 #https://github.com/marketplace/actions/checkout
@@ -71,7 +71,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4.0.2 #https://github.com/marketplace/actions/configure-aws-credentials-action-for-github-actions
         with:
           role-to-assume: ${{ secrets.AWS_ROLE }}
-          aws-region: $AWS_REGION
+          aws-region: ${{ steps.set-var.outputs.AWS_REGION }}
           role-session-name: GitHub-OIDC-TERRAFORM
 
       - name: Setup Terraform
@@ -90,7 +90,7 @@ jobs:
 
       - name: Terraform Plan
         working-directory: AWS_TF_Remote_Backend
-        run: terraform plan -var-file $TF_VAR_FILE
+        run: terraform plan -var-file ${{ steps.set-var.outputs.TF_VAR_FILE }}
 
       - name: Terraform Apply
         if: ${{ success() && github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && env.TERRAFORM_ACTION == 'apply'}}
@@ -98,4 +98,4 @@ jobs:
         run: |
           echo "Step only executes when main branch manually triggered"
           terraform apply -auto-approve \
-            -var-file $TF_VAR_FILE
+            -var-file ${{ steps.set-var.outputs.TF_VAR_FILE }}
