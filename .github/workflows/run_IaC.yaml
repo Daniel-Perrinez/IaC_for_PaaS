@@ -32,33 +32,30 @@ permissions:
     id-token: write # This is required for aws oidc connection
 #     contents: read # This is required for actions/checkout
 
-# if: github.event_name == 'workflow_dispatch'
-# env:
-#   CLOUD_ACCOUNT: inputs.cloud_account
-#   AWS_REGION: inputs.aws_region
-#   ENVIRONMENT: inputs.environment
-#   TERRAFORM_ACTION: inputs.terraform_action
-# else:
+if: github.event_name == 'workflow_dispatch'
+env:
+  CLOUD_ACCOUNT: inputs.cloud_account
+  AWS_REGION: inputs.aws_region
+  ENVIRONMENT: inputs.environment
+  TERRAFORM_ACTION: inputs.terraform_action
+  TF_VAR_FILE: "vars/${{ inputs.cloud_account }}/${{ inputs.environment }}/vars.tfvars"
+  TF_VAR_oidc_thumbprint: ${{ secrets.OIDC_THUMBPRINT }}
+  TF_VAR_aws_region: ${{inputs.aws_region}}
 
+else:
 env:
   CLOUD_ACCOUNT: 'dp-sandbox'
   AWS_REGION: 'us-east-1'
   ENVIRONMENT: 'nonprod'
   TERRAFORM_ACTION: 'plan'
-
-  TF_VAR_FILE: "vars/${{ env.CLOUD_ACCOUNT }}/${{ env.ENVIRONMENT }}/vars.tfvars"
+  TF_VAR_FILE: "vars/dp-sanbox/nonprod/vars.tfvars"
   TF_VAR_oidc_thumbprint: ${{ secrets.OIDC_THUMBPRINT }}
-  TF_VAR_aws_region: $AWS_REGION
+  TF_VAR_aws_region: us-east-1
 
 jobs:
   Run-IaC:
     name: Run-IaC-Workflow
     runs-on: ubuntu-latest
-
-    # env:
-    #   TF_VAR_FILE: "vars/${{ env.CLOUD_ACCOUNT }}/${{ env.ENVIRONMENT }}/vars.tfvars"
-    #   TF_VAR_oidc_thumbprint: ${{ secrets.OIDC_THUMBPRINT }}
-    #   TF_VAR_aws_region: ${{ env.AWS_REGION }}
 
     steps:
       # - name: Set Environment Variable Conditionally
