@@ -32,32 +32,30 @@ permissions:
     id-token: write # This is required for aws oidc connection
 #     contents: read # This is required for actions/checkout
 
-if: github.event_name == 'workflow_dispatch'
-    ca: inputs.cloud_account
-    ar: inputs.aws_region
-    envr: inputs.environment
-    tfa: inputs.terraform_action
-else:
-    ca: 'dp-sandbox'
-    ar: 'us-east-1'
-    envr: 'nonprod'
-    tfa: 'plan'
-
-env:
-    TF_VAR_FILE: "vars/${{ env.CLOUD_ACCOUNT }}/${{ env.ENVIRONMENT }}/vars.tfvars"
-    TF_VAR_oidc_thumbprint: ${{ secrets.OIDC_THUMBPRINT }}
-    TF_VAR_aws_region: ${{ env.AWS_REGION }}
-    CLOUD_ACCOUNT: ca
-    AWS_REGION: ar
-    ENVIRONMENT: envr
-    TERRAFORM_ACTION: tfa
-
 jobs:
   terraform:
     name: Run-IaC-Workflow
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set Environment Variable Conditionally
+        run: |
+          if [ "${{ github.event_name }}" == 'workflow_dispatch' ]; then
+            echo "CLOUD_ACCOUNT=${{inputs.cloud_account}}"
+            echo "AWS_REGION=${{inputs.aws_region}}"
+            echo "ENVIRONMENT=${{inputs.environment}}"
+            echo "TERRAFORM_ACTION=${{inputs.terraform_action}}"
+          else
+            echo "CLOUD_ACCOUNT=dp-sandbox"
+            echo "AWS_REGION=us-east-1"
+            echo "ENVIRONMENT=nonprod"
+            echo "TERRAFORM_ACTION=plan"
+            
+          fi
+          echo "TF_VAR_FILE=vars/${{ env.CLOUD_ACCOUNT }}/${{ env.ENVIRONMENT }}/vars.tfvars"
+          echo "TF_VAR_oidc_thumbprint=${{ secrets.OIDC_THUMBPRINT }}"
+          echo "TF_VAR_aws_region=${{ env.AWS_REGION }}"
+
       - name: Checkout code
         uses: actions/checkout@v4.1.1 #https://github.com/marketplace/actions/checkout
       
