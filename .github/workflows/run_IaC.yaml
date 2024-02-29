@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - '*'  
-      
+
   workflow_dispatch:
     inputs:
       cloud_account:
@@ -32,10 +32,23 @@ permissions:
     id-token: write # This is required for aws oidc connection
 #     contents: read # This is required for actions/checkout
 
+if: github.event_name == 'workflow_dispatch'
+  env:
+    CLOUD_ACCOUNT: inputs.cloud_account
+    AWS_REGION: inputs.aws_region
+    ENVIRONMENT: inputs.environment
+    TERRAFORM_ACTION: inputs.terraform_action
+else:
+  env:
+    CLOUD_ACCOUNT: 'dp-sandbox'
+    AWS_REGION: 'us-east-1'
+    ENVIRONMENT: 'nonprod'
+    TERRAFORM_ACTION: 'plan'
+
 env:
-  TF_VAR_FILE: "vars/${{ inputs.cloud_account }}/${{ inputs.environment }}/vars.tfvars"
-  TF_VAR_oidc_thumbprint: ${{ secrets.OIDC_THUMBPRINT }}
-  TF_VAR_aws_region: ${{inputs.aws_region}}
+    TF_VAR_FILE: "vars/${{ CLOUD_ACCOUNT }}/${{ ENVIRONMENT }}/vars.tfvars"
+    TF_VAR_oidc_thumbprint: ${{ secrets.OIDC_THUMBPRINT }}
+    TF_VAR_aws_region: ${{AWS_REGION}}
 
 jobs:
   terraform:
@@ -58,7 +71,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4.0.2 #https://github.com/marketplace/actions/configure-aws-credentials-action-for-github-actions
         with:
           role-to-assume: ${{ secrets.AWS_ROLE }}
-          aws-region: ${{ inputs.aws_region }}
+          aws-region: ${{ AWS_REGION }}
           role-session-name: GitHub-OIDC-TERRAFORM
 
       - name: Setup Terraform
@@ -86,7 +99,7 @@ jobs:
         run: terraform plan -var-file ${{ env.TF_VAR_FILE }}
 
       - name: Terraform Apply
-        if: ${{ success() && github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.terraform_action == 'apply'}}
+        if: ${{ success() && github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && TERRAFORM_ACTION == 'apply'}}
         working-directory: AWS_TF_Remote_Backend
         run: |
           echo "Step only executes when main branch manually triggered"
