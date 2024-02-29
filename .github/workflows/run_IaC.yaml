@@ -45,9 +45,9 @@ env:
   ENVIRONMENT: 'nonprod'
   TERRAFORM_ACTION: 'plan'
 
-  TF_VAR_FILE: "vars/${{ env.CLOUD_ACCOUNT }}/${{ env.ENVIRONMENT }}/vars.tfvars"
+  TF_VAR_FILE: "vars/$CLOUD_ACCOUNT/$ENVIRONMENT/vars.tfvars"
   TF_VAR_oidc_thumbprint: ${{ secrets.OIDC_THUMBPRINT }}
-  TF_VAR_aws_region: ${{ env.AWS_REGION }}
+  TF_VAR_aws_region: $AWS_REGION
 
 jobs:
   terraform:
