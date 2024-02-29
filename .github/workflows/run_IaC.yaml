@@ -30,24 +30,9 @@ on:
 
 permissions:
     id-token: write # This is required for aws oidc connection
-#     contents: read # This is required for actions/checkout
-
-env:
-      TF_VAR_FILE: "vars/${{ vars.CLOUD_ACCOUNT }}/${{ vars.ENVIRONMENT }}/vars.tfvars"
-      TF_VAR_oidc_thumbprint: ${{ secrets.OIDC_THUMBPRINT }}
-      TF_VAR_aws_region: ${{ vars.AWS_REGION }}
 
 jobs:
   Run-IaC:
-    # if: github.event_name == 'workflow_dispatch'
-    # env:
-    #   CLOUD_ACCOUNT: inputs.cloud_account
-    #   AWS_REGION: inputs.aws_region
-    #   ENVIRONMENT: inputs.environment
-    #   TERRAFORM_ACTION: inputs.terraform_action
-    #   TF_VAR_FILE: "vars/${{ inputs.cloud_account }}/${{ inputs.environment }}/vars.tfvars"
-    #   TF_VAR_oidc_thumbprint: ${{ secrets.OIDC_THUMBPRINT }}
-    #   TF_VAR_aws_region: ${{inputs.aws_region}}
 
     name: Run-IaC-Workflow
     runs-on: ubuntu-latest
@@ -55,22 +40,25 @@ jobs:
     steps:
       - name: Set Environment Variable Conditionally
         run: |
-          if [ "${{ github.event_name }}" == 'workflow_dispatch' ]; then          
+          if [ "${{ github.event_name }}" == 'workflow_dispatch' ]; then
+            echo "-------- Manual Job Values --------"
             echo "CLOUD_ACCOUNT=${{inputs.cloud_account}}" >> $GITHUB_ENV
             echo "AWS_REGION=${{inputs.aws_region}}" >> $GITHUB_ENV
             echo "ENVIRONMENT=${{inputs.environment}}" >> $GITHUB_ENV
             echo "TERRAFORM_ACTION=${{inputs.terraform_action}}" >> $GITHUB_ENV
+            echo "TF_VAR_FILE=vars/${{inputs.cloud_account}}/${{inputs.environment}}/vars.tfvars" >> $GITHUB_ENV
+            echo "TF_VAR_oidc_thumbprint=${{ secrets.OIDC_THUMBPRINT }}" >> $GITHUB_ENV
+            echo "TF_VAR_aws_region=${{inputs.aws_region}}" >> $GITHUB_ENV
           else
-            echo "-------- ELSE condition --------"
+            echo "-------- Default Job Values --------"
             echo "CLOUD_ACCOUNT=${{vars.cloud_account}}" >> $GITHUB_ENV
             echo "AWS_REGION=${{vars.aws_region}}" >> $GITHUB_ENV
             echo "ENVIRONMENT=${{vars.environment}}" >> $GITHUB_ENV
             echo "TERRAFORM_ACTION=${{vars.terraform_action}}" >> $GITHUB_ENV
-            
+            echo "TF_VAR_FILE=vars/${{vars.cloud_account}}/${{vars.environment}}/vars.tfvars" >> $GITHUB_ENV
+            echo "TF_VAR_oidc_thumbprint=${{ secrets.OIDC_THUMBPRINT }}" >> $GITHUB_ENV
+            echo "TF_VAR_aws_region=${{vars.aws_region}}" >> $GITHUB_ENV
           fi
-          # echo "TF_VAR_FILE=vars/${{ steps.set-var.outputs.CLOUD_ACCOUNT }}/${{ steps.set-var.outputs.ENVIRONMENT }}/vars.tfvars"
-          # echo "TF_VAR_oidc_thumbprint=${{ secrets.OIDC_THUMBPRINT }}"
-          # echo "TF_VAR_aws_region=${{ steps.set-var.outputs.AWS_REGION }}"
 
       - name: Checkout code
         uses: actions/checkout@v4.1.1 #https://github.com/marketplace/actions/checkout
