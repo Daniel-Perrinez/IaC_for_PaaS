@@ -42,7 +42,7 @@ jobs:
       AWS_REGION: 'us-east-1'
       ENVIRONMENT: 'nonprod'
       TERRAFORM_ACTION: 'plan'
-      TF_VAR_FILE: "vars/dp-sanbox/nonprod/vars.tfvars"
+      TF_VAR_FILE: "vars/dp-sandbox/nonprod/vars.tfvars"
       TF_VAR_oidc_thumbprint: ${{ secrets.OIDC_THUMBPRINT }}
       TF_VAR_aws_region: us-east-1
   
