@@ -1,9 +1,13 @@
 # Local .terraform directories
 **/.terraform/*
 
+# Ignore all .tfstate files
+*.tfstate
+*.tfstate.*
+
 # We need to commit .tfstate files for: IaC_for_PaaS/AWS_TF_Remote_Backend
-# .tfstate files
-# *.tfstate
-# *.tfstate.*
+# Exclude the specific directory and its .tfstate files
+!IaC_for_PaaS/AWS_TF_Remote_Backend/*.tfstate
+!IaC_for_PaaS/AWS_TF_Remote_Backend/*.tfstate.*
 
 .DS_Store

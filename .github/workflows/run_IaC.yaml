@@ -33,8 +33,7 @@ permissions:
 
 jobs:
   Run-IaC:
-
-    name: Run-IaC-Workflow
+    name: AWS_TF_Remote_Backend
     runs-on: ubuntu-latest
 
     steps:
@@ -85,21 +84,25 @@ jobs:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
       - name: Terraform Init
-        working-directory: AWS_TF_Remote_Backend
+        working-directory: AWS_TF_Harbor
         run: terraform init
 
       - name: Terraform Validate
-        working-directory: AWS_TF_Remote_Backend
+        working-directory: AWS_TF_Harbor
         run: terraform validate
 
       - name: Terraform Plan
-        working-directory: AWS_TF_Remote_Backend
+        working-directory: AWS_TF_Harbor
         run: terraform plan -var-file ${{ env.TF_VAR_FILE }}
 
       - name: Terraform Apply
         if: ${{ success() && github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && env.TERRAFORM_ACTION == 'apply'}}
-        working-directory: AWS_TF_Remote_Backend
+        working-directory: AWS_TF_Harbor
         run: |
           echo "Step only executes when main branch manually triggered"
           terraform apply -auto-approve \
             -var-file ${{ env.TF_VAR_FILE }}
+
+  Run-IaC:
+    name: AWS_TF_Harbor
+    runs-on: ubuntu-latest
