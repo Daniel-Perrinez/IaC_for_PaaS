@@ -9,7 +9,6 @@ resource "aws_iam_openid_connect_provider" "iac_for_paas_oidc_provider" {
 
 resource "aws_iam_role" "github_actions_role" {
   name               = "github-actions-role"
-#   assume_role_policy = data.aws_iam_policy_document.backend-policy.json
   assume_role_policy = aws_iam_policy.backend-policy.policy
 }
 
