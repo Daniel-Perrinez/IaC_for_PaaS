@@ -1,24 +1,28 @@
 {
-	"Version": "2012-10-17",
-	"Statement": [
-		{
-			"Effect": "Allow",
-			"Action": [
-				"s3:PutObject",
-				"s3:ListBucket",
-				"s3:Get*",
-				"iam:GetOpenIDConnectProvider",
-				"dynamodb:DescribeTable",
-				"dynamodb:DescribeContinuousBackups",
-				"dynamodb:DescribeTimeToLive",
-				"dynamodb:ListTagsOfResource"
-			],
-			"Resource": [
-				"arn:aws:s3:::paas-remote-state-bucket/*",
-				"arn:aws:s3:::paas-remote-state-bucket",
-				"arn:aws:iam::905418106762:oidc-provider/token.actions.githubusercontent.com",
-				"arn:aws:dynamodb:us-east-1:905418106762:table/paas-remote-state-dynamodb-table"
-			]
-		}
-	]
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:ListBucket",
+                "s3:Get*",
+                "iam:GetOpenIDConnectProvider",
+                "iam:CreatePolicy",
+                "iam:CreateRole",
+                "iam:*",
+                "dynamodb:DescribeTable",
+                "dynamodb:DescribeContinuousBackups",
+                "dynamodb:DescribeTimeToLive",
+                "dynamodb:ListTagsOfResource"
+            ],
+            "Resource": [
+                "arn:aws:s3:::paas-remote-state-bucket/*",
+                "arn:aws:s3:::paas-remote-state-bucket",
+                "arn:aws:iam::905418106762:oidc-provider/token.actions.githubusercontent.com",
+                "arn:aws:iam::905418106762:policy/backend-policy",
+                "arn:aws:dynamodb:us-east-1:905418106762:table/paas-remote-state-dynamodb-table"
+            ]
+        }
+    ]
 }
