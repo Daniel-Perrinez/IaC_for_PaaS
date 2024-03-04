@@ -32,7 +32,7 @@ permissions:
     id-token: write # This is required for aws oidc connection
 
 jobs:
-  Run-IaC:
+  Run-IaC-Remote-Backend:
     name: AWS_TF_Remote_Backend
     runs-on: ubuntu-latest
 
@@ -103,6 +103,6 @@ jobs:
           terraform apply -auto-approve \
             -var-file ${{ env.TF_VAR_FILE }}
 
-  Run-IaC:
+  Run-IaC-Harbor:
     name: AWS_TF_Harbor
     runs-on: ubuntu-latest
