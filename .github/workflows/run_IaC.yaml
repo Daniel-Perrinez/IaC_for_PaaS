@@ -162,14 +162,14 @@ jobs:
         working-directory: AWS_TF_Harbor
         run: terraform validate
 
-      - name: Terraform Plan
-        working-directory: AWS_TF_Harbor
-        run: terraform plan -var-file ${{ env.TF_VAR_FILE }}
+      # - name: Terraform Plan
+      #   working-directory: AWS_TF_Harbor
+      #   run: terraform plan -var-file ${{ env.TF_VAR_FILE }}
 
-      - name: Terraform Apply
-        if: ${{ success() && github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && env.TERRAFORM_ACTION == 'apply'}}
-        working-directory: AWS_TF_Harbor
-        run: |
-          echo "Step only executes when main branch manually triggered"
-          terraform apply -auto-approve \
-            -var-file ${{ env.TF_VAR_FILE }}
+      # - name: Terraform Apply
+      #   if: ${{ success() && github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && env.TERRAFORM_ACTION == 'apply'}}
+      #   working-directory: AWS_TF_Harbor
+      #   run: |
+      #     echo "Step only executes when main branch manually triggered"
+      #     terraform apply -auto-approve \
+      #       -var-file ${{ env.TF_VAR_FILE }}
