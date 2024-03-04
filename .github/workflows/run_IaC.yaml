@@ -156,7 +156,7 @@ jobs:
 
       - name: Terraform Init
         working-directory: AWS_TF_Harbor
-        run: terraform init
+        run: terraform init -backend-config=vars/dp-sandbox/nonprod/backend.hcl
 
       - name: Terraform Validate
         working-directory: AWS_TF_Harbor
