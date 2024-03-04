@@ -8,9 +8,9 @@
 
 environment                     = "NONPROD"
 environment_prefix              = "dp-sandbox-np"
-# remote_state                    = "paas-remote-state"
-# terraform_state_bucket_name     = "paas-remote-state-bucket"
-# dynamodb_table_name             = "paas-remote-state-dynamodb-table"
+remote_state                    = "global/s3/terraform.tfstate"
+terraform_state_bucket_name     = "paas-remote-state-bucket"
+dynamodb_table_name             = "paas-remote-state-dynamodb-table"
 
 tags = {
   Name = "dp-sandbox-np-paas-remote-state"
