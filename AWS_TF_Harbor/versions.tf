@@ -7,4 +7,6 @@ terraform {
       version = ">= 4.57"
     }
   }
+
+  backend "s3" {}
 }

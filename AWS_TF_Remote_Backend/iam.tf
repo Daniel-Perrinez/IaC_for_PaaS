@@ -16,11 +16,3 @@ resource "aws_iam_policy" "backend-policy" {
   name   = "backend-policy"
   policy = file("policies/backend-policy.json")
 }
-
-# output "file_contents" {
-#   value = file("${path.module}/policies/backend-policy.json")
-# }
-
-# output "path_module" {
-#     value = path.module
-# }
