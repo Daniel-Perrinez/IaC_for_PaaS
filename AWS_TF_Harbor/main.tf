@@ -15,7 +15,7 @@ locals {
 }
 
 resource "aws_instance" "example" {
-  ami           = "ami-0c55b159cbfafe1f0"
+  ami           = "ami-0440d3b780d96b29d"
   instance_type = "t2.large"
 
   tags = {
