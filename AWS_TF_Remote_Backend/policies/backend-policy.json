@@ -18,6 +18,7 @@
 				"dynamodb:DescribeContinuousBackups",
 				"dynamodb:DescribeTimeToLive",
 				"dynamodb:ListTagsOfResource",
+                "dynamodb:PutItem",
                 "dynamodb:GetItem"
             ],
             "Resource": [
