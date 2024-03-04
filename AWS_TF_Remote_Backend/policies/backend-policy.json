@@ -6,18 +6,20 @@
             "Action": [
 				"s3:PutObject",
 				"s3:ListBucket",
+                "S3:ListObjectsV2",
 				"s3:GetObject",
 				"s3:GetBucketPolicy",
 				"S3:GetBucketAcl",
 				"S3:GetBucketCors",
 				"S3:GetBucketWebsite",
 				"S3:GetBucketVersioning",
-				"S3:GetBucketAccelerateConfiguration", 
+				"S3:GetBucketAccelerateConfiguration",
 				"iam:GetOpenIDConnectProvider",
 				"dynamodb:DescribeTable",
 				"dynamodb:DescribeContinuousBackups",
 				"dynamodb:DescribeTimeToLive",
 				"dynamodb:ListTagsOfResource",
+                "dynamodb:PutItem",
                 "dynamodb:GetItem"
             ],
             "Resource": [
