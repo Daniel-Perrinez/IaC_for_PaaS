@@ -20,7 +20,8 @@
 				"dynamodb:DescribeTimeToLive",
 				"dynamodb:ListTagsOfResource",
                 "dynamodb:PutItem",
-                "dynamodb:GetItem"
+                "dynamodb:GetItem",
+                "ec2:RunInstances"
             ],
             "Resource": [
                 "arn:aws:s3:::paas-remote-state-bucket/*",
