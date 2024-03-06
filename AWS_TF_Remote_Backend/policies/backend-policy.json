@@ -48,7 +48,8 @@
             "Action": [
                 "ec2:RunInstances",
                 "ec2:CreateTags",
-                "ec2:Describe*"
+                "ec2:Describe*",
+                "ec2:TerminateInstances"
             ],
             "Resource": [
                 "*"
