@@ -14,12 +14,12 @@ locals {
   }
 }
 
-resource "aws_instance" "harbor_ec2" {
-  ami           = "ami-0440d3b780d96b29d"
-  instance_type = "t2.large"
-  subnet_id     = "subnet-0576679eaf3324036"
+# resource "aws_instance" "harbor_ec2" {
+#   ami           = "ami-0440d3b780d96b29d"
+#   instance_type = "t2.large"
+#   subnet_id     = "subnet-0576679eaf3324036"
 
-  tags = {
-    Name = local.name
-  }
-}
+#   tags = {
+#     Name = local.name
+#   }
+# }
