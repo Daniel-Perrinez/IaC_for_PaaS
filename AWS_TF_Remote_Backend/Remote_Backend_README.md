@@ -10,5 +10,5 @@ terraform plan -var-file vars/dp-sandbox/nonprod/vars.tfvars
         #  Thumbprint OpenID Connect
 
         #  Enter a value: 
-        
+
 terraform apply -var-file vars/dp-sandbox/nonprod/vars.tfvars -auto-approve
